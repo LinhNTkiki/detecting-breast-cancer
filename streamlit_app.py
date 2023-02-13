@@ -57,9 +57,18 @@ def load_model() -> tf.keras.Model:
 
 def get_prediction(image):
     pred = model.predict(np.expand_dims(image, 0))[0][0]
-    pred_label = "malignant" if pred > 0.5 else "benign"
-    st.success(f"Result: {pred:.5f}")
-    st.markdown(f"Inference at `threshold==0.5`: {pred_label!r}")
+    if pred < 0.5:
+        st.success(f"Result: {pred:.5f}")
+        st.markdown("Inference at *threshold==0.5*: :green['benign']")
+    else:
+        st.warning(f"Result: {pred:.5f}")
+        st.markdown("Inference at *threshold==0.5*: :orange['malignant']")
+    st.caption(
+        "The model's output node has *sigmoid activation*, with 'malignant' "
+        "being the positive class (1), and 'benign' being the negative "
+        "class (0). Values close to 1 suggest high chances of malignancy, "
+        "and vice versa."
+    )
 
 
 model = load_model()
