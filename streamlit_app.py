@@ -51,8 +51,7 @@ def load_model() -> tf.keras.Model:
     Returns:
         tf.keras.Model: EfficientNet-B0 model.
     """
-    model = tf.keras.models.load_model("efficientnet-b0.h5")
-    return model
+    return tf.keras.models.load_model("efficientnet-b0.h5")
 
 
 def get_prediction(image):
@@ -73,7 +72,6 @@ def get_prediction(image):
 
 model = load_model()
 sample_images = load_sample_image_files()
-
 
 upload_tab, sample_tab = st.tabs(["Upload an image", "Use a sample image"])
 
