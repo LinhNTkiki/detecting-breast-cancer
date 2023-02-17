@@ -10,10 +10,10 @@ IMG_SIZE = 224
 SAMPLE_IMG_DIR = Path("sample_images")
 
 
-st.header("Breast Cancer Classifier")
+st.header("Breast Cancer Detector")
 st.markdown(
-    "Predict whether [histopathological][hp] images of breast tissue "
-    "contain *malignant* or *benign* cancer.\n\n"
+    "Predict whether samples of breast tissue are *benign* or *malignant "
+    "(cancerous)*.\n\n"
     "[hp]: https://en.wikipedia.org/wiki/Histopathology"
 )
 
@@ -92,3 +92,9 @@ with sample_tab:
         idx = np.random.choice(len(image_list))
         st.image(image_list[idx], caption=f"{label} sample")
         get_prediction(image_list[idx])
+
+st.caption(
+    "The model use here was trained in this [notebook][nb]\n\n"
+    "[nb]: https://www.kaggle.com/code/timothyabwao/detecting-breast-cancer"
+    "-with-computer-vision"
+)
