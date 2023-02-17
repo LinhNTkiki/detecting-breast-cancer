@@ -51,7 +51,7 @@ def load_model() -> tf.keras.Model:
     Returns:
         tf.keras.Model: EfficientNet-B0 model.
     """
-    return tf.keras.models.load_model("efficientnet-b0.h5")
+    return tf.keras.models.load_model("cnn_model.h5")
 
 
 def get_prediction(image):
