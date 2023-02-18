@@ -1,12 +1,12 @@
-# Breast Cancer Classifier
+# Breast Cancer Detector
 
-Predict whether [histopathological][hp] images of breast tissue contain malignant or benign cancer.
+Predict whether breast tissue samples in [histopathological][hp] images are *benign* or *malignant (cancerous)*.
 
-Powered by [streamlit][st]. The data used to train the model can be found [here][data].
+The model used here was trained in [this notebook][nb]. This project is part of my submission as a mentee in the [KaggleX BIPOC Mentorship Program][bipoc].
 
 [hp]: https://en.wikipedia.org/wiki/Histopathology
-[st]: https://streamlit.io/
-[data]: https://www.kaggle.com/datasets/forderation/breakhis-400x
+[nb]: https://www.kaggle.com/code/timothyabwao/detecting-breast-cancer-with-computer-vision
+[bipoc]: https://www.kaggle.com/kagglex-bipoc-mentorship-program
 
 <https://breast-cancer-kagglex-project.streamlit.app/>
 
