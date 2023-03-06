@@ -12,34 +12,43 @@ SAMPLE_IMG_DIR = Path("sample_images")
 
 st.header("Breast Cancer Detector")
 st.markdown(
-    "Predict whether samples of breast tissue are *benign* or *malignant "
-    "(cancerous)*.\n\n"
+    "Predict whether samples of breast tumour tissue are *benign* or "
+    "*malignant (cancerous)*.\n\n"
     "[hp]: https://en.wikipedia.org/wiki/Histopathology"
 )
 
 
-def process_image(image: Path | UploadedFile) -> np.ndarray:
-    """Convert and resize image input into the form expected in the model.
+def load_image(
+    image: Path | UploadedFile, resize: bool = False
+) -> Image.Image | tf.Tensor:
+    """Convert an input image into the form expected by the model.
 
     Args:
         image (Path | UploadedFile): Image input.
+        resize (bool): Whether or not to resize the image.
 
     Returns:
-        np.ndarray: An array of shape (IMG_SIZE, IMG_SIZE, 3).
+        PIL.image.Image | tensorflow.Tensor: A PIL Image. Or a 3D tensor, if
+        resize is True.
     """
-    img = Image.open(image).resize((IMG_SIZE, IMG_SIZE))
-    return np.array(img)
+    img = Image.open(image)
+    if resize:
+        # Ensure image is in RGB mode
+        img = img.convert("RGB")
+        return tf.image.resize_with_pad(img, IMG_SIZE, IMG_SIZE)
+    else:
+        return Image.open(image)
 
 
 @st.cache_data
-def load_sample_image_files() -> dict:
+def get_sample_image_files() -> dict:
     """Fetch processed sample images, separated by label.
 
     Returns:
         dict: Keys are labels ("benign" / "malignant"). Values are lists.
     """
     return {
-        dir.name: [process_image(file) for file in dir.glob("*.png")]
+        dir.name: [load_image(file) for file in dir.glob("*.jpg")]
         for dir in SAMPLE_IMG_DIR.iterdir()
     }
 
@@ -55,7 +64,7 @@ def load_model() -> tf.keras.Model:
 
 
 def get_prediction(image):
-    pred = model.predict(np.expand_dims(image, 0))[0][0]
+    pred = model.predict(np.expand_dims(image, 0), verbose=0)[0][0]
     if pred < 0.5:
         st.success(f"Result: {pred:.5f}")
         st.markdown("Inference at *threshold==0.5*: :green['benign']")
@@ -71,7 +80,7 @@ def get_prediction(image):
 
 
 model = load_model()
-sample_images = load_sample_image_files()
+sample_images = get_sample_image_files()
 
 upload_tab, sample_tab = st.tabs(["Upload an image", "Use a sample image"])
 
@@ -80,8 +89,8 @@ with upload_tab:
         file = st.file_uploader("Upload image", type=["jpg", "jpeg", "png"])
         submitted = st.form_submit_button("submit")
         if file:
-            img = process_image(file)
-            st.image(img)
+            img = load_image(file, resize=True)
+            st.image(img.numpy().astype("uint8"))
             get_prediction(img)
 
 with sample_tab:
