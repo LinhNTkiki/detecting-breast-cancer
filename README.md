@@ -1,8 +1,10 @@
 # Breast Cancer Detector
 
-Predict whether breast tissue samples in [histopathological][hp] images are *benign* or *malignant (cancerous)*.
+Predict whether breast tumour tissue samples in [histopathological][hp] images are *benign* or *malignant (cancerous)*.
 
-The model used here was trained in [this notebook][nb]. This project is part of my submission as a mentee in the [KaggleX BIPOC Mentorship Program][bipoc].
+The model used here was trained in [this notebook][nb].
+
+This project is part of my submission as a mentee in the [KaggleX BIPOC Mentorship Program][bipoc].
 
 [hp]: https://en.wikipedia.org/wiki/Histopathology
 [nb]: https://www.kaggle.com/code/timothyabwao/detecting-breast-cancer-with-computer-vision
