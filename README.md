@@ -4,10 +4,11 @@ Predict whether breast tumour tissue samples in [histopathological][hp] images a
 
 The model used here was trained in [this notebook][nb].
 
-This project is part of my submission as a mentee in the **KaggleX BIPOC Mentorship Program**.
+This project is part of my submission as a mentee in cohort 2 of the [KaggleX BIPOC Mentorship Program][kaggle-x].
 
 [hp]: https://en.wikipedia.org/wiki/Histopathology
 [nb]: https://www.kaggle.com/code/timothyabwao/detecting-breast-cancer-with-computer-vision
+[kaggle-x]: https://www.kaggle.com/kagglex
 
 <https://breast-cancer-kagglex-project.streamlit.app/>
 
