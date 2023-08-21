@@ -41,11 +41,12 @@ def load_image(
 
 
 @st.cache_data
-def get_sample_image_files() -> dict:
+def get_sample_image_files() -> dict[str, list]:
     """Fetch processed sample images, separated by label.
 
     Returns:
-        dict: Keys are labels ("benign" / "malignant"). Values are lists.
+        dict: Keys are labels ("benign" / "malignant"). Values are lists of
+        images.
     """
     return {
         dir.name: [load_image(file) for file in dir.glob("*.jpg")]
@@ -58,12 +59,18 @@ def load_model() -> tf.keras.Model:
     """Fetch pretrained model.
 
     Returns:
-        tf.keras.Model: EfficientNet-B0 model.
+        tf.keras.Model: Trained convolutional neural network model.
     """
     return tf.keras.models.load_model("cnn_model.h5")
 
 
-def get_prediction(image):
+def get_prediction(image: Image.Image | tf.Tensor) -> None:
+    """Obtain a prediction for the supplied image, and format the results for
+    display.
+
+    Args:
+        image (Image | Tensor): An image (PIL Image or 3D tensor).
+    """
     pred = model.predict(np.expand_dims(image, 0), verbose=0)[0][0]
     if pred < 0.5:
         st.success(f"Result: {pred:.5f}")
@@ -79,8 +86,8 @@ def get_prediction(image):
     )
 
 
-model = load_model()
 sample_images = get_sample_image_files()
+model = load_model()
 
 upload_tab, sample_tab = st.tabs(["Upload an image", "Use a sample image"])
 
