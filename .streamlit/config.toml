@@ -1,8 +1,8 @@
 [theme]
 primaryColor="purple"
-backgroundColor="#f2f2f2"
-secondaryBackgroundColor="#F0F2F6"
-textColor="#262730"
+backgroundColor="#eee"
+secondaryBackgroundColor="#e2cee2"
+textColor="#444"
 font="serif"
 
 [server]
