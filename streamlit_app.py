@@ -9,8 +9,9 @@ from streamlit.runtime.uploaded_file_manager import UploadedFile
 IMG_SIZE = 224
 SAMPLE_IMG_DIR = Path("sample_images")
 
-
-st.header("Breast Cancer Detector")
+title = "Breast Cancer Detector"
+st.set_page_config(page_title=title)
+st.header(title)
 st.markdown(
     "Predict whether breast tumours in [histopathological][hp] images are"
      " *benign* or *malignant (cancerous)*.\n\n"
