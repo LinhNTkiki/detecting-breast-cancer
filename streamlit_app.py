@@ -12,8 +12,8 @@ SAMPLE_IMG_DIR = Path("sample_images")
 
 st.header("Breast Cancer Detector")
 st.markdown(
-    "Predict whether samples of breast tumour tissue are *benign* or "
-    "*malignant (cancerous)*.\n\n"
+    "Predict whether breast tumours in [histopathological][hp] images are"
+     " *benign* or *malignant (cancerous)*.\n\n"
     "[hp]: https://en.wikipedia.org/wiki/Histopathology"
 )
 
@@ -33,16 +33,14 @@ def load_image(
     """
     img = Image.open(image)
     if resize:
-        # Ensure image is in RGB mode
-        img = img.convert("RGB")
-        return tf.image.resize_with_pad(img, IMG_SIZE, IMG_SIZE)
-    else:
-        return Image.open(image)
+        img = img.convert("RGB")  # Ensure image is in RGB mode
+        img = tf.image.resize_with_pad(img, IMG_SIZE, IMG_SIZE)
+    return img
 
 
 @st.cache_data
 def get_sample_image_files() -> dict[str, list]:
-    """Fetch processed sample images, separated by label.
+    """Fetch processed sample images, grouped by label.
 
     Returns:
         dict: Keys are labels ("benign" / "malignant"). Values are lists of
@@ -59,7 +57,7 @@ def load_model() -> tf.keras.Model:
     """Fetch pretrained model.
 
     Returns:
-        tf.keras.Model: Trained convolutional neural network model.
+        tf.keras.Model: Trained convolutional neural network.
     """
     return tf.keras.models.load_model("cnn_model.h5")
 
@@ -110,7 +108,8 @@ with sample_tab:
         get_prediction(image_list[idx])
 
 st.caption(
-    "The model use here was trained in this [notebook][nb]\n\n"
+    "Exploratory data analysis and model training were performed in "
+    "[this Kaggle notebook][nb].\n\n"
     "[nb]: https://www.kaggle.com/code/timothyabwao/detecting-breast-cancer"
     "-with-computer-vision"
 )
