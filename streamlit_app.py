@@ -65,11 +65,6 @@ def get_prediction(image: tf.Tensor) -> None:
         image (tf.Tensor): A 3D tensor.
     """
     pred = model.predict(np.expand_dims(image, 0), verbose=0)[0]
-    class_idx = np.argmax(pred)
-    class_labels = ["benign", "malignant", "normal"]
-    result = class_labels[class_idx]
-    confidence = pred[class_idx]
-  pred = model.predict(np.expand_dims(image, 0), verbose=0)[0]
     if pred < 0.3:
         st.info(f"Result: {pred:.5f}")
         st.markdown("Inference at *threshold==0.3*: :blue['normal']")
