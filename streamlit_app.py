@@ -13,9 +13,9 @@ title = "Dự đoán ung thư vú"
 st.set_page_config(page_title=title)
 st.header(title)
 st.markdown(
-    "Predict whether breast tumours in [histopathological][hp] images are"
-     " *benign* or *malignant (cancerous)*.\n\n"
-    "[hp]: https://en.wikipedia.org/wiki/Histopathology"
+    "Dự đoán liệu khối u vú trong hình ảnh siêu âm  [Ungthuvu][hp]"
+     " *benign* *nomarl" or *malignant (cancerous)*.\n\n"
+    "[hp]: https://vi.wikipedia.org/wiki/Ung_th%C6%B0_v%C3%BA#:~:text=Si%C3%AAu%20%C3%A2m%20tuy%E1%BA%BFn%20v%C3%BA%3A%20l%C3%A0,thai%20v%C3%A0%20ph%E1%BB%A5%20n%E1%BB%AF%20tr%E1%BA%BB."
 )
 
 
