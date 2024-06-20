@@ -13,8 +13,8 @@ title = "Dự đoán ung thư vú"
 st.set_page_config(page_title=title)
 st.header(title)
 st.markdown(
-    "Dự đoán khối u vú trên hình ảnh siêu âm [histopathological][hp] là"
-    " *benign*, *normal* or *malignant (cancerous)*.\n\n"
+    "Dự đoán khối u vú trên hình ảnh siêu âm [ungthuvul][hp] là"
+    " *benign*, *normal* or *malignant (ung thư)*.\n\n"
     "[hp]: https://vi.wikipedia.org/wiki/Ung_th%C6%B0_v%C3%BA"
 )
 
@@ -88,7 +88,7 @@ def get_prediction(image: tf.Tensor) -> None:
 sample_images = get_sample_image_files()
 model = load_model()
 
-upload_tab, sample_tab = st.tabs(["Upload an image", "Use a sample image"])
+upload_tab, sample_tab = st.tabs(["Tải ảnh lên", "Sử dụng ảnh mẫu"])
 
 with upload_tab:
     with st.form("image-input-form", clear_on_submit=True):
@@ -110,7 +110,7 @@ with sample_tab:
         get_prediction(img)
 
 st.caption(
-    "Exploratory data analysis and model training were performed in "
+    "Phân tích dữ liệu thăm dò và đào tạo mô hình đã được thực hiện trong "
     "[this Kaggle notebook][nb].\n\n"
     "[nb]: https://www.kaggle.com/datasets/aryashah2k/breast-ultrasound-images-dataset-with-computer-vision"
 )
