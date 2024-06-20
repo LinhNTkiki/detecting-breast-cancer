@@ -9,7 +9,7 @@ from streamlit.runtime.uploaded_file_manager import UploadedFile
 IMG_SIZE = 224
 SAMPLE_IMG_DIR = Path("sample_images")
 
-title = "Breast Cancer Detector"
+title = "Dự đoán ung thư vú"
 st.set_page_config(page_title=title)
 st.header(title)
 st.markdown(
