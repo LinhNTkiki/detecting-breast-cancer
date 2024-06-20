@@ -13,9 +13,9 @@ title = "Dự đoán ung thư vú"
 st.set_page_config(page_title=title)
 st.header(title)
 st.markdown(
-    "Predict whether breast tumours in [histopathological][hp] images are"
+    "Dự đoán khối u vú trên hình ảnh siêu âm [histopathological][hp] là"
     " *benign*, *normal* or *malignant (cancerous)*.\n\n"
-    "[hp]: https://en.wikipedia.org/wiki/Histopathology"
+    "[hp]: https://vi.wikipedia.org/wiki/Ung_th%C6%B0_v%C3%BA"
 )
 
 def load_image(image: Path | UploadedFile, resize: bool = False) -> tf.Tensor:
