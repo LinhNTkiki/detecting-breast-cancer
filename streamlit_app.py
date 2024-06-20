@@ -14,7 +14,7 @@ st.set_page_config(page_title=title)
 st.header(title)
 st.markdown(
    "Predict whether breast tumours in [histopathological][hp] images are"
-     " *benign* or *malignant (cancerous)*.\n\n"
+     " *benign* *normal* or *malignant (cancerous)*.\n\n"
     "[hp]: https://en.wikipedia.org/wiki/Histopathology"
 )
 
@@ -111,6 +111,6 @@ with sample_tab:
 st.caption(
     "Exploratory data analysis and model training were performed in "
     "[this Kaggle notebook][nb].\n\n"
-    "[nb]: https://www.kaggle.com/code/timothyabwao/detecting-breast-cancer"
+    "[nb]: https://www.kaggle.com/datasets/aryashah2k/breast-ultrasound-images-dataset"
     "-with-computer-vision"
 )
