@@ -1,20 +1,21 @@
+from pathlib import Path
+
+import numpy as np
 import streamlit as st
 import tensorflow as tf
-import numpy as np
 from PIL import Image
-from pathlib import Path
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 IMG_SIZE = 224
 SAMPLE_IMG_DIR = Path("sample_images")
 
-title = "Breast Cancer Detector"
+title = "Dự đoán ung thư vú"
 st.set_page_config(page_title=title)
 st.header(title)
 st.markdown(
-    "Predict whether breast tumours in [histopathological][hp] images are"
-    " *benign*, *malignant (cancerous)*, or *normal*.\n\n"
-    "[hp]: https://en.wikipedia.org/wiki/Histopathology"
+    "Dự đoán khối u vú trên hình ảnh siêu âm [ungthuvu][hp] là"
+    " *benign*, *normal* or *malignant (ung thư)*.\n\n"
+    "[hp]: https://vi.wikipedia.org/wiki/Ung_th%C6%B0_v%C3%BA"
 )
 
 
@@ -43,7 +44,7 @@ def get_sample_image_files() -> dict[str, list]:
     """Fetch processed sample images, grouped by label.
 
     Returns:
-        dict: Keys are labels ("benign", "malignant", "normal"). Values are lists of
+        dict: Keys are labels ("benign" / "malignant"). Values are lists of
         images.
     """
     return {
@@ -69,22 +70,18 @@ def get_prediction(image: Image.Image | tf.Tensor) -> None:
     Args:
         image (Image | Tensor): An image (PIL Image or 3D tensor).
     """
-    pred = model.predict(np.expand_dims(image, 0), verbose=0)[0]
-    class_names = ["benign", "malignant", "normal"]
-    predicted_class = class_names[np.argmax(pred)]
-    st.success(f"Prediction: {predicted_class}")
-    st.markdown(f"Predicted probabilities: {dict(zip(class_names, pred))}")
-    st.caption(
-        "The model's output node has *softmax activation*, providing probabilities "
-        "for each class: 'benign', 'malignant', and 'normal'. The class with the highest "
-        "probability is the predicted class."
-    )
-
+    pred = model.predict(np.expand_dims(image, 0), verbose=0)[0][0]
+    if pred < 0.5:
+        st.success(f"Result: {pred:.5f}")
+        st.markdown("Inference at *threshold==0.5*: :green['benign']")
+    else:
+        st.warning(f"Result: {pred:.5f}")
+        st.markdown("Inference at *threshold==0.5*: :orange['malignant']")
 
 sample_images = get_sample_image_files()
 model = load_model()
 
-upload_tab, sample_tab = st.tabs(["Upload an image", "Use a sample image"])
+upload_tab, sample_tab = st.tabs(["Tải ảnh lên", "Sử dụng ảnh mẫu"])
 
 with upload_tab:
     with st.form("image-input-form", clear_on_submit=True):
@@ -95,18 +92,9 @@ with upload_tab:
             st.image(img.numpy().astype("uint8"))
             get_prediction(img)
 
-with sample_tab:
-    if st.button("Get sample image", type="primary"):
-        # Randomly select a sample image
-        label = np.random.choice(["benign", "malignant", "normal"])
-        image_list = sample_images[label]
-        idx = np.random.choice(len(image_list))
-        st.image(image_list[idx], caption=f"{label} sample")
-        get_prediction(image_list[idx])
 
 st.caption(
-    "Exploratory data analysis and model training were performed in "
+    "Phân tích dữ liệu thăm dò và đào tạo mô hình đã được thực hiện trong "
     "[this Kaggle notebook][nb].\n\n"
-    "[nb]: https://www.kaggle.com/code/timothyabwao/detecting-breast-cancer"
-    "-with-computer-vision"
+    "[nb]: https://www.kaggle.com/datasets/aryashah2k/breast-ultrasound-images-dataset-with-computer-vision"
 )
