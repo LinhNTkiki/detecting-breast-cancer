@@ -77,13 +77,6 @@ def get_prediction(image: Image.Image | tf.Tensor) -> None:
     else:
         st.warning(f"Result: {pred:.5f}")
         st.markdown("Inference at *threshold==0.5*: :orange['malignant']")
-    st.caption(
-        "The model's output node has *sigmoid activation*, with 'malignant' "
-        "being the positive class (1), and 'benign' being the negative "
-        "class (0). Values close to 1 suggest high chances of malignancy, "
-        "and vice versa."
-    )
-
 
 sample_images = get_sample_image_files()
 model = load_model()
@@ -99,14 +92,6 @@ with upload_tab:
             st.image(img.numpy().astype("uint8"))
             get_prediction(img)
 
-with sample_tab:
-    if st.button("Get sample image", type="primary"):
-        # Randomly select a sample image
-        label = np.random.choice(["benign", "malignant"])
-        image_list = sample_images[label]
-        idx = np.random.choice(len(image_list))
-        st.image(image_list[idx], caption=f"{label} sample")
-        get_prediction(image_list[idx])
 
 st.caption(
     "Phân tích dữ liệu thăm dò và đào tạo mô hình đã được thực hiện trong "
