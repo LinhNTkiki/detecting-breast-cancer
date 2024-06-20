@@ -65,14 +65,16 @@ def get_prediction(image: tf.Tensor) -> None:
         image (tf.Tensor): A 3D tensor.
     """
     pred = model.predict(np.expand_dims(image, 0), verbose=0)[0]
-    if pred < 0.3:
-        st.info(f"Result: {pred:.5f}")
+    pred_value = pred[0]  # Ensure pred is a scalar value
+
+    if pred_value < 0.3:
+        st.info(f"Result: {pred_value:.5f}")
         st.markdown("Inference at *threshold==0.3*: :blue['normal']")
-    elif 0.3 <= pred <= 0.6:
-        st.success(f"Result: {pred:.5f}")
+    elif 0.3 <= pred_value <= 0.6:
+        st.success(f"Result: {pred_value:.5f}")
         st.markdown("Inference at *threshold==0.5*: :green['benign']")
     else:
-        st.warning(f"Result: {pred:.5f}")
+        st.warning(f"Result: {pred_value:.5f}")
         st.markdown("Inference at *threshold==0.6*: :orange['malignant']")
     st.caption(
         "The model's output node has *sigmoid activation*, with 'malignant' "
