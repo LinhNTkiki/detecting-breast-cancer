@@ -13,15 +13,12 @@ title = "Dự đoán ung thư vú"
 st.set_page_config(page_title=title)
 st.header(title)
 st.markdown(
-   "Predict whether breast tumours in [histopathological][hp] images are"
-     " *benign*, *normal* or *malignant (cancerous)*.\n\n"
+    "Predict whether breast tumours in [histopathological][hp] images are"
+    " *benign*, *normal* or *malignant (cancerous)*.\n\n"
     "[hp]: https://en.wikipedia.org/wiki/Histopathology"
 )
 
-
-def load_image(
-    image: Path | UploadedFile, resize: bool = False
-) -> Image.Image | tf.Tensor:
+def load_image(image: Path | UploadedFile, resize: bool = False) -> tf.Tensor:
     """Convert an input image into the form expected by the model.
 
     Args:
@@ -29,29 +26,28 @@ def load_image(
         resize (bool): Whether or not to resize the image.
 
     Returns:
-        PIL.image.Image | tensorflow.Tensor: A PIL Image. Or a 3D tensor, if
-        resize is True.
+        tf.Tensor: A 3D tensor.
     """
     img = Image.open(image)
+    img = img.convert("RGB")  # Ensure image is in RGB mode
+    img = np.array(img)
     if resize:
-        img = img.convert("RGB")  # Ensure image is in RGB mode
         img = tf.image.resize_with_pad(img, IMG_SIZE, IMG_SIZE)
+    img = tf.convert_to_tensor(img, dtype=tf.float32) / 255.0  # Normalize to [0, 1]
     return img
-
 
 @st.cache_data
 def get_sample_image_files() -> dict[str, list]:
     """Fetch processed sample images, grouped by label.
 
     Returns:
-        dict: Keys are labels ("benign" / "malignant"/ "normal"). Values are lists of
+        dict: Keys are labels ("benign" / "malignant" / "normal"). Values are lists of
         images.
     """
     return {
-        dir.name: [load_image(file) for file in dir.glob("*.jpg")]
-        for dir in SAMPLE_IMG_DIR.iterdir()
+        dir.name: [load_image(file, resize=True) for file in dir.glob("*.jpg")]
+        for dir in SAMPLE_IMG_DIR.iterdir() if dir.is_dir()
     }
-
 
 @st.cache_resource
 def load_model() -> tf.keras.Model:
@@ -62,15 +58,13 @@ def load_model() -> tf.keras.Model:
     """
     return tf.keras.models.load_model("cnn_model.h5")
 
-
-def get_prediction(image: Image.Image | tf.Tensor) -> None:
-    """Obtain a prediction for the supplied image, and format the results for
-    display.
+def get_prediction(image: tf.Tensor) -> None:
+    """Obtain a prediction for the supplied image, and format the results for display.
 
     Args:
-        image (Image | Tensor): An image (PIL Image or 3D tensor).
+        image (tf.Tensor): A 3D tensor.
     """
-    pred = model.predict(np.expand_dims(image, 0), verbose=0)[0][0]
+    pred = model.predict(np.expand_dims(image, 0), verbose=0)[0]
     class_idx = np.argmax(pred)
     class_labels = ["benign", "malignant", "normal"]
     result = class_labels[class_idx]
@@ -91,7 +85,6 @@ def get_prediction(image: Image.Image | tf.Tensor) -> None:
         "and vice versa."
     )
 
-
 sample_images = get_sample_image_files()
 model = load_model()
 
@@ -101,23 +94,23 @@ with upload_tab:
     with st.form("image-input-form", clear_on_submit=True):
         file = st.file_uploader("Upload image", type=["jpg", "jpeg", "png"])
         submitted = st.form_submit_button("submit")
-        if file:
+        if file and submitted:
             img = load_image(file, resize=True)
-            st.image(img.numpy().astype("uint8"))
+            st.image(img.numpy())
             get_prediction(img)
 
 with sample_tab:
     if st.button("Get sample image", type="primary"):
         # Randomly select a sample image
-        label = np.random.choice(["benign", "malignant", "normal"])
+        label = np.random.choice(list(sample_images.keys()))
         image_list = sample_images[label]
         idx = np.random.choice(len(image_list))
-        st.image(image_list[idx], caption=f"{label} sample")
-        get_prediction(image_list[idx])
+        img = image_list[idx]
+        st.image(img.numpy(), caption=f"{label} sample")
+        get_prediction(img)
 
 st.caption(
     "Exploratory data analysis and model training were performed in "
     "[this Kaggle notebook][nb].\n\n"
-    "[nb]: https://www.kaggle.com/datasets/aryashah2k/breast-ultrasound-images-dataset"
-    "-with-computer-vision"
+    "[nb]: https://www.kaggle.com/datasets/aryashah2k/breast-ultrasound-images-dataset-with-computer-vision"
 )
