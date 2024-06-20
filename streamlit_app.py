@@ -14,7 +14,7 @@ st.set_page_config(page_title=title)
 st.header(title)
 st.markdown(
    "Predict whether breast tumours in [histopathological][hp] images are"
-     " *benign* *normal* or *malignant (cancerous)*.\n\n"
+     " *benign*, *normal* or *malignant (cancerous)*.\n\n"
     "[hp]: https://en.wikipedia.org/wiki/Histopathology"
 )
 
@@ -44,7 +44,7 @@ def get_sample_image_files() -> dict[str, list]:
     """Fetch processed sample images, grouped by label.
 
     Returns:
-        dict: Keys are labels ("benign" / "malignant"). Values are lists of
+        dict: Keys are labels ("benign" / "malignant"/ "normal"). Values are lists of
         images.
     """
     return {
@@ -71,12 +71,19 @@ def get_prediction(image: Image.Image | tf.Tensor) -> None:
         image (Image | Tensor): An image (PIL Image or 3D tensor).
     """
     pred = model.predict(np.expand_dims(image, 0), verbose=0)[0][0]
-    if pred < 0.5:
-        st.success(f"Result: {pred:.5f}")
-        st.markdown("Inference at *threshold==0.5*: :green['benign']")
+    class_idx = np.argmax(pred)
+    class_labels = ["benign", "malignant", "normal"]
+    result = class_labels[class_idx]
+    confidence = pred[class_idx]
+    if result == "benign":
+        st.success(f"Result: {confidence:.5f}")
+        st.markdown("Inference: :green['benign']")
+    elif result == "malignant":
+        st.warning(f"Result: {confidence:.5f}")
+        st.markdown("Inference: :orange['malignant']")
     else:
-        st.warning(f"Result: {pred:.5f}")
-        st.markdown("Inference at *threshold==0.5*: :orange['malignant']")
+        st.info(f"Result: {confidence:.5f}")
+        st.markdown("Inference: :blue['normal']")
     st.caption(
         "The model's output node has *sigmoid activation*, with 'malignant' "
         "being the positive class (1), and 'benign' being the negative "
@@ -102,7 +109,7 @@ with upload_tab:
 with sample_tab:
     if st.button("Get sample image", type="primary"):
         # Randomly select a sample image
-        label = np.random.choice(["benign", "malignant"])
+        label = np.random.choice(["benign", "malignant", "normal"])
         image_list = sample_images[label]
         idx = np.random.choice(len(image_list))
         st.image(image_list[idx], caption=f"{label} sample")
