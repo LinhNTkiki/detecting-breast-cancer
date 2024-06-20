@@ -69,15 +69,16 @@ def get_prediction(image: tf.Tensor) -> None:
     class_labels = ["benign", "malignant", "normal"]
     result = class_labels[class_idx]
     confidence = pred[class_idx]
-    if result == "benign":
-        st.success(f"Result: {confidence:.5f}")
-        st.markdown("Inference: :green['benign']")
-    elif result == "malignant":
-        st.warning(f"Result: {confidence:.5f}")
-        st.markdown("Inference: :orange['malignant']")
+  pred = model.predict(np.expand_dims(image, 0), verbose=0)[0]
+    if pred < 0.3:
+        st.info(f"Result: {pred:.5f}")
+        st.markdown("Inference at *threshold==0.3*: :blue['normal']")
+    elif 0.3 <= pred <= 0.6:
+        st.success(f"Result: {pred:.5f}")
+        st.markdown("Inference at *threshold==0.5*: :green['benign']")
     else:
-        st.info(f"Result: {confidence:.5f}")
-        st.markdown("Inference: :blue['normal']")
+        st.warning(f"Result: {pred:.5f}")
+        st.markdown("Inference at *threshold==0.6*: :orange['malignant']")
     st.caption(
         "The model's output node has *sigmoid activation*, with 'malignant' "
         "being the positive class (1), and 'benign' being the negative "
