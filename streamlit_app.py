@@ -7,7 +7,7 @@ from PIL import Image
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 IMG_SIZE = 224
-SAMPLE_IMG_DIR = Path("AI.py")
+SAMPLE_IMG_DIR = Path("sample_images")
 
 title = "Dự đoán ung thư vú"
 st.set_page_config(page_title=title)
