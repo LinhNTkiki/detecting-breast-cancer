@@ -13,7 +13,7 @@ title = "Dự đoán ung thư vú"
 st.set_page_config(page_title=title)
 st.header(title)
 st.markdown(
-    "Dự đoán khối u vú trên hình ảnh siêu âm [ungthuvul][hp] là"
+    "Dự đoán khối u vú trên hình ảnh siêu âm [ungthuvu][hp] là"
     " *benign*, *normal* or *malignant (ung thư)*.\n\n"
     "[hp]: https://vi.wikipedia.org/wiki/Ung_th%C6%B0_v%C3%BA"
 )
